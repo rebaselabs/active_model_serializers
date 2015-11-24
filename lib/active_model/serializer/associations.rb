@@ -135,6 +135,8 @@ module ActiveModel
           ids_key = "#{@name.to_s.singularize}_ids".to_sym
           if !option(:embed_key) && !source_serializer.respond_to?(@name.to_s) && source_serializer.object.respond_to?(ids_key)
             source_serializer.object.read_attribute_for_serialization(ids_key)
+          elsif associated_object && display_key = option(:display_key)
+            source_serializer.send(display_key)
           else
             associated_object.map do |item|
               item.read_attribute_for_serialization(embed_key)
@@ -221,6 +223,8 @@ module ActiveModel
             end
           elsif !option(:embed_key) && !source_serializer.respond_to?(@name.to_s) && source_serializer.object.respond_to?(id_key)
             source_serializer.object.read_attribute_for_serialization(id_key)
+          elsif associated_object && display_key = option(:display_key)
+            source_serializer.send(display_key)
           elsif associated_object
             associated_object.read_attribute_for_serialization(embed_key)
           else
